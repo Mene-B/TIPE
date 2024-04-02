@@ -6,6 +6,3 @@ int read_header (FILE* fichier, int* hauteur, int* largeur);
 
 //renvoie la liste des pixels de fichier 
 pix_t* read_body (FILE* fichier, int hauteur, int largeur, int valmax);
-
-//renvoie le pixel représenté par les couleurs r,g,b
-pix_t read_pix (int r, int g, int b)
