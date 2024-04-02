@@ -5,4 +5,4 @@ pix_t* read_ppm (char name, int* hauteur, int* largeur, int* taille_max);
 int read_header (FILE* fichier, int* hauteur, int* largeur);
 
 //renvoie la liste des pixels de fichier 
-pix_t* read_body (FILE* fichier, int hauteur, int largeur, int valmax);
+pix_t* read_body (FILE* fichier, int hauteur, int largeur, int maxval);
