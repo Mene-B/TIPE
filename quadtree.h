@@ -1,7 +1,11 @@
+typedef struct pixel {
+    int r;
+    int g;
+    int b;
+} pix_t;
+
 typedef struct tree {
-    float r;
-    float g;
-    float b;
-    struct tree** enfants
+    pix_t* pixel;
+    struct tree** enfants;
 } tree_t;
 
