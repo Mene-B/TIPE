@@ -82,3 +82,39 @@ image_t** split_list (image_t* img){
     return res;
 }
 
+
+int respect_incertitude(image_t* image, int u){
+    int max_r = image->pixels[0][0]->r;
+    int min_r = image->pixels[0][0]->r;
+    int max_g = image->pixels[0][0]->g;
+    int min_g = image->pixels[0][0]->g;
+    int max_b = image->pixels[0][0]->b;
+    int min_b = image->pixels[0][0]->b;
+
+    for(int i = 0; i < image->hauteur; i++){
+        for(int j = 0; j < image->largeur; j++){
+            if(image->pixels[i][j]->r > max_r){
+                max_r = image->pixels[i][j]->r;
+            }
+            if(image->pixels[i][j]->r < min_r){
+                min_r = image->pixels[i][j]->r;
+            }
+            if(image->pixels[i][j]->g > max_g){
+                max_g = image->pixels[i][j]->g;
+            }
+            if(image->pixels[i][j]->g < min_g){
+                max_g = image->pixels[i][j]->g;
+            }
+            if(image->pixels[i][j]->b > max_b){
+                max_b = image->pixels[i][j]->b;
+            }
+            if(image->pixels[i][j]->b < min_b){
+                min_b = image->pixels[i][j]->b;
+            }
+        }
+    }
+    if ((max_r - min_r)>u || (max_r - min_r)>u || (max_r - min_r)>u){
+        return 0;
+    }
+    return 1;
+}
