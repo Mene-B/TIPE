@@ -20,3 +20,6 @@ pix_t* read_pix* (int r, int g, int b, int maxval);
 
 //sépare pixels en 4 listes en fonction de leur position dans l'image. 
 image_t** split_list (image_t* img);
+
+// Renvoie 1 si l'incertitude est respectée dans une certaine image, 0 sinon
+int respect_incertitude(image_t* image, int incertitude);
