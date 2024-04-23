@@ -1,3 +1,5 @@
+#include <stdlib.h>
+    
 typedef struct pixel {
     int r;
     int g;
