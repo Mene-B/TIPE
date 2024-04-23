@@ -18,7 +18,7 @@ typedef struct img {
 } image_t;
 
 //renvoie le pixel représenté par les couleurs r,g,b
-pix_t* read_pix* (int r, int g, int b, int maxval);
+pix_t* read_pix (int r, int g, int b, int maxval);
 
 //sépare pixels en 4 listes en fonction de leur position dans l'image. 
 image_t** split_list (image_t* img);
