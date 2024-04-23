@@ -1,3 +1,5 @@
+#include "quadtree.h"
+
 pix_t* read_pix (int red, int green, int blue, int maxval){
     pix_t* res = malloc(sizeof (pix_t));
     res -> r = red*255/maxval;
