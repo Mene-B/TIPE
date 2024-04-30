@@ -5,7 +5,7 @@ pix_t* read_pix (int red, int green, int blue, int maxval){
     res -> r = red*255/maxval;
     res -> g = green*255/maxval;
     res -> b = blue*255/maxval; 
-    return res 
+    return res;
 }
 
 image_t** split_list (image_t* img){
@@ -117,4 +117,40 @@ int respect_incertitude(image_t* image, int u){
         return 0;
     }
     return 1;
+}
+
+
+pix_t* average_pixel(image_t* image){
+    float nb_pixels = (float) (image->hauteur * image->largeur);
+    float moy_r = 0;
+    float moy_g = 0;
+    float moy_b = 0;
+    for(int i = 0; i < image->hauteur; i++){
+        for(int j = 0; j < image->largeur; j++){
+            moy_r += ((float) image->pixels[i][j]->r)/nb_pixels;
+            moy_g += ((float) image->pixels[i][j]->g)/nb_pixels;
+            moy_b += ((float) image->pixels[i][j]->b)/nb_pixels;
+        }
+    }
+    pix_t* pixel = malloc(sizeof(pix_t));
+    pixel->b = (int) moy_b;
+    pixel->r = (int) moy_r;
+    pixel->g = (int) moy_g;
+    return pixel;
+}
+
+
+tree_t* make_tree(image_t* image, int u){
+    if(respect_incertitude(image, u) == 0){
+        image_t** quad_images = split_list(image);
+        tree_t* arbre = malloc(sizeof(tree_t));
+        arbre->enfants = malloc(4*sizeof(tree_t*));
+        arbre->pixel = NULL;
+        for(int i = 0; i <4; i++){
+            arbre->enfants[i] = make_tree(quad_images[i],u);
+        }
+        return arbre;
+    }else{
+        
+    }
 }
