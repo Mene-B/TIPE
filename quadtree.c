@@ -151,7 +151,11 @@ tree_t* make_tree(image_t* image, int u){
         }
         return arbre;
     }else{
-        
+        pix_t* avrg_pixel = average_pixel(image);
+        tree_t* arbre  = malloc(sizeof(tree_t));
+        arbre->pixel = avrg_pixel;
+        arbre->enfants = NULL;
+        return arbre;
     }
 }
 
