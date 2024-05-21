@@ -106,7 +106,15 @@ image_t* tree_to_image(dim_tree_t* dim_arbre){
 }
 
 
-void write_header(FILE* f,int largeur, int hauteur ){
+void img_to_ppm (char* filename, image_t* image){
+    FILE* f  = fopen(filename, "w");
+    int largeur = image->largeur;
+    int hauteur = image->hauteur;
+    write_header(f, image->largeur, image->hauteur);
+    write_body (f, image->largeur, image->hauteur, image->pixels);
+}
+
+void write_header(FILE* f,int largeur, int hauteur){
     fprintf(f, "P6");
     fprintf(f, "\n");
     char* chiffres = malloc(10*sizeof(char));
@@ -120,7 +128,7 @@ void write_header(FILE* f,int largeur, int hauteur ){
         fprintf(f, "%c", chiffres[i-1]);
         i--;
     }
-    fprintf(f, "\n");
+    fprintf(f, " ");
     while(hauteur != 0){
         chiffres[i] = '0'+ hauteur%10;
         hauteur = hauteur / 10;
@@ -145,13 +153,12 @@ void write_header(FILE* f,int largeur, int hauteur ){
 
 }
 
-
-
-
-int main(){
-    char* f_n = "sample_1920×1280.ppm";
-    FILE* f = fopen(f_n,"r");
-    int hauteur;
-    int largeur;
-    read_header(f, &hauteur, &largeur);
+void write_body(FILE* f, int largeur, int hauteur, pix_t*** pixels){
+    for (int i=0; i<hauteur; i++){
+        for (int j=0; j<largeur; j++){
+            fprintf(f, "%c", pixels[i][j]->r);
+            fprintf(f, "%c", pixels[i][j]->g);
+            fprintf(f, "%c", pixels[i][j]->b);
+        }
+    }
 }
