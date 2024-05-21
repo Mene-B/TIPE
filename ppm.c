@@ -3,20 +3,71 @@
 #include <assert.h>
 
 int read_header (FILE* fichier, int* hauteur, int* largeur){
-    char* s;
+    assert(fichier != NULL);
+    char* s = malloc(3*sizeof(char));
     fscanf(fichier, "%s", s);
-    printf("%s", s);
+    printf("%s\n", s);
     char poubelle;
     char c = '0';
-    int width = 0;
+    int width=0;
+    int height=0;
+    int maxval=0;
     fscanf(fichier, "%c", &poubelle);
     while (c != 32 && c != 13 && c != 10 && c != 9){
-        printf("%d\n", c - '0');
         width = 10*width + c - '0';
         fscanf(fichier, "%c", &c);
     }
-    printf("%d", width);
-    return 1;
+    c = '0';
+    while (c != 32 && c != 13 && c != 10 && c != 9){
+        height = 10*height + c - '0';
+        fscanf(fichier, "%c", &c);
+    }
+    c = '0';
+    while (c != 32 && c != 13 && c != 10 && c != 9){
+        maxval = 10*maxval + c - '0';
+        fscanf(fichier, "%c", &c);
+    }
+
+    *hauteur = height;
+    *largeur = width;
+    // printf("hauteur : %d\n", height);
+    // printf("largeur : %d\n", width);
+    // printf("maxval : %d\n", maxval);
+    return maxval;
+}
+
+int read_int(FILE* fichier){
+    assert(fichier!=NULL);
+    unsigned int res=0;
+    unsigned char entier;
+    fscanf(fichier, "%c", &entier);
+    res = entier;
+    // printf("%u\n", res);
+    return res;
+}
+
+pix_t*** read_body (FILE* fichier, int hauteur, int largeur){
+    pix_t*** res = malloc(hauteur*sizeof(pix_t**));
+    for (int i=0; i<hauteur; i++){
+        res[i] = malloc(largeur*sizeof(pix_t*));
+        for (int j=0; j<largeur; j++){
+            res[i][j] = malloc(sizeof(pix_t));
+            res[i][j]->r = read_int(fichier);
+            res[i][j]->g = read_int(fichier);
+            res[i][j]->b = read_int(fichier);
+        }
+    }
+    return res;
+}
+
+image_t* read_ppm (char* name, int* p_hauteur, int* p_largeur, int* p_taille_max){
+    FILE* f = fopen(name, "r");
+    int maxval = read_header (f, p_hauteur, p_largeur);
+    image_t* res = malloc(sizeof(image_t));
+    res -> hauteur = *p_hauteur;
+    res -> largeur = *p_largeur;
+    res -> pixels = read_body(f,*p_hauteur,*p_largeur);
+    return res;
 }
 
 
