@@ -170,16 +170,10 @@ dim_tree_t* make_tree(image_t* image, int u){
 
 
 int main(){
-    image_t* test = malloc(sizeof(image_t));
-    test -> hauteur = 1000;
-    test -> largeur = 1000;
-    test -> pixels = malloc(test->hauteur*sizeof(pix_t**));
-    for (int i = 0; i<test->hauteur; i++){
-        test->pixels[i] = malloc(test->largeur*sizeof(pix_t*));
-        for (int j=0; j<test->largeur; j++){
-            test->pixels[i][j]->r = 255*i/1000;
-            test->pixels[i][j]->g = 255*j/1000;
-            test->pixels[i][j]->b = 255*(i-j)/1000;
-        }
-    }
+    char* f_n = "sample_1920×1280.ppm";
+    int* p_hauteur = malloc(sizeof(int));
+    int* p_largeur = malloc(sizeof(int));
+    int* p_taille_max = malloc(sizeof(int));
+    image_t* test = read_ppm (f_n, p_hauteur, p_largeur, p_taille_max);
+    tree_t* test2 = make_tree(test,5);
 }
