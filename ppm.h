@@ -11,7 +11,7 @@ pix_t* read_body (FILE* fichier, int hauteur, int largeur, int maxval);
 int read_int (FILE* fichier);
 
 // Créer l'imafe au format ppm à partir de l'arbre avec les données compressées 
-void tree_to_image(dim_tree_t* arbre, char* file_name);
+void tree_to_image(dim_tree_t* arbre);
 
 // Ecrit le header du fichier ppm 
 void write_header(FILE* f, int largeur, int longueur);
