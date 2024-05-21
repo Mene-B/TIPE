@@ -141,31 +141,31 @@ pix_t* average_pixel(image_t* image){
 
 
 
-dim_tree_t* make_tree(image_t* image, int u){
+tree_t* make_tree(image_t* image, int u){
     if(respect_incertitude(image, u) == 0){
         image_t** quad_images = split_list(image);
         tree_t* arbre = malloc(sizeof(tree_t));
-        dim_tree_t* dim_arbre = malloc(sizeof(dim_tree_t));
         arbre->enfants = malloc(4*sizeof(tree_t*));
         arbre->pixel = NULL;
         for(int i = 0; i <4; i++){
             arbre->enfants[i] = make_tree(quad_images[i],u);
         }
-        dim_arbre->arbre = arbre;
-        dim_arbre->hauteur = image->hauteur;
-        dim_arbre->largeur = image->largeur;
-        return dim_arbre;
+        return arbre;
     }else{
         pix_t* avrg_pixel = average_pixel(image);
         tree_t* arbre  = malloc(sizeof(tree_t));
-        dim_tree_t* dim_arbre = malloc(sizeof(dim_tree_t));
         arbre->pixel = avrg_pixel;
         arbre->enfants = NULL;
-        dim_arbre->arbre = arbre;
-        dim_arbre->hauteur = image->hauteur;
-        dim_arbre->largeur = image->largeur;
-        return dim_arbre;
+        return arbre;
     }
+}
+
+dim_tree_t* make_tree_dim(image_t* image, int u){
+    dim_tree_t* dim_tree = malloc(sizeof(dim_tree_t));
+    dim_tree->arbre = make_tree(image, u);
+    dim_tree->largeur = image->largeur;
+    dim_tree->hauteur = image->hauteur;
+    return dim_tree;
 }
 
 
