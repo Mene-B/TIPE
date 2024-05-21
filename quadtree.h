@@ -17,6 +17,12 @@ typedef struct img {
     int largeur;
 } image_t;
 
+typedef struct arbre_h_l {
+    int hauteur;
+    int largeur; 
+    tree_t* arbre;
+} dim_tree_t;
+
 //renvoie le pixel représenté par les couleurs r,g,b
 pix_t* read_pix (int r, int g, int b, int maxval);
 
