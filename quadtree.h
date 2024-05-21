@@ -31,3 +31,6 @@ image_t** split_list (image_t* img);
 
 // Renvoie 1 si l'incertitude est respectée dans une certaine image, 0 sinon
 int respect_incertitude(image_t* image, int incertitude);
+
+// Renvoie le pixel moyen d'une image
+pix_t* average_pixel(image_t* image);
