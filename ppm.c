@@ -71,12 +71,38 @@ image_t* read_ppm (char* name, int* p_hauteur, int* p_largeur, int* p_taille_max
 }
 
 
-void tree_to_image(dim_tree_t* dim_arbre, char* file_name){
-    FILE* f  = fopen(file_name, "w");
+void tree_to_matrice(tree_t* arbre, pix_t*** mat, int i, int j, int largeur, int hauteur){
+    int new_largeur = (int) (largeur/2);
+    int new_hauteur = (int) (hauteur/2);
+    if(arbre->enfants != NULL){
+        tree_to_matrice(arbre->enfants[0], mat, i, j, new_largeur, new_hauteur);
+        tree_to_matrice(arbre->enfants[1], mat, i + new_largeur, j, new_largeur, hauteur - new_hauteur);
+        tree_to_matrice(arbre->enfants[2], mat, i, j + new_hauteur, largeur - new_largeur, new_hauteur);
+        tree_to_matrice(arbre->enfants[3], mat, i + new_largeur, j + new_hauteur, largeur -  new_largeur, hauteur -  new_hauteur);
+    }else {
+        for (int k = i; k < i + largeur; k++){
+            for (int p = j; p < j + hauteur; p++){
+                mat[p][k] = arbre->pixel;
+            }
+        }
+    }
+}
+
+
+image_t* tree_to_image(dim_tree_t* dim_arbre){
     int largeur = dim_arbre->largeur;
     int hauteur = dim_arbre->hauteur;
-    write_header(f, largeur, hauteur);
-
+    tree_t* arbre = dim_arbre->arbre;
+    pix_t*** mat = malloc(hauteur*sizeof(pix_t**));
+    for(int i = 0; i < hauteur ; i++){
+        mat[i] = malloc(largeur*sizeof(pix_t*));
+    }
+    tree_to_matrice(arbre, mat, 0, 0, largeur, hauteur);
+    image_t* image = malloc(sizeof(image));
+    image->hauteur = hauteur;
+    image->largeur = largeur;
+    image->pixels = mat;
+    return image;
 }
 
 
