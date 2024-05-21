@@ -11,7 +11,7 @@ pix_t* read_body (FILE* fichier, int hauteur, int largeur, int valmax);
 image_t* tree_to_image(dim_tree_t* arbre);
 
 // Transforme un arbre en une matrice qui met les pixels aux bons endroits dans la matrice
-void tree_to_matrice(tree_t* arbre, pix_t*** mat, int i, int j, int largeur, int hauteur);;
+void tree_to_matrice(tree_t* arbre, pix_t*** mat, int i, int j, int largeur, int hauteur);
 
 //crée un fichier ppm appelé filename avec les données de image
 void img_to_ppm (char* filename, image_t* image);
