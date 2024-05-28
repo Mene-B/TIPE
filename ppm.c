@@ -76,13 +76,17 @@ void tree_to_matrice(tree_t* arbre, pix_t*** mat, int i, int j, int largeur, int
     int new_hauteur = (int) (hauteur/2);
     if(arbre->enfants != NULL){
         tree_to_matrice(arbre->enfants[0], mat, i, j, new_largeur, new_hauteur);
-        tree_to_matrice(arbre->enfants[1], mat, i + new_largeur, j, new_largeur, hauteur - new_hauteur);
-        tree_to_matrice(arbre->enfants[2], mat, i, j + new_hauteur, largeur - new_largeur, new_hauteur);
+        tree_to_matrice(arbre->enfants[1], mat, i, j + new_largeur, largeur - new_largeur, hauteur);
+        tree_to_matrice(arbre->enfants[2], mat, i + new_hauteur, j, new_largeur, hauteur -new_hauteur);
         tree_to_matrice(arbre->enfants[3], mat, i + new_largeur, j + new_hauteur, largeur -  new_largeur, hauteur -  new_hauteur);
     }else {
-        for (int k = i; k < i + largeur; k++){
-            for (int p = j; p < j + hauteur; p++){
-                mat[p][k] = arbre->pixel;
+        for (int k = i; k < i + hauteur; k++){
+            for (int p = j; p < j + largeur; p++){
+                pix_t* pixel = malloc(sizeof(pix_t));
+                pixel -> r = arbre->pixels->r;
+                pixel -> g = arbre->pixels->g;
+                pixel -> b = arbre->pixels->b;
+                mat[k][p] = pixel;
             }
         }
     }
