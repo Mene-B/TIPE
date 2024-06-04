@@ -1,4 +1,7 @@
 #include "quadtree.h"
+#include "ppm.h"
+#include <assert.h>
+#include <string.h>
 
 pix_t* read_pix (int red, int green, int blue, int maxval){
     pix_t* res = malloc(sizeof (pix_t));
@@ -13,12 +16,10 @@ image_t** split_list (image_t* img){
     int h2 = img->hauteur - h1;
     int l1 = img->largeur / 2;
     int l2 = img->largeur - l1;
-    int taille1 = h1*img->largeur;
-    int taille2 = h2*img->largeur;
-    int taille = taille1+taille2;
+
     pix_t*** liste1 = malloc(h1*sizeof(pix_t**));
     for (int i = 0; i<h1; i++){
-        liste1[i] = malloc(l1*sizeof(pix_t));
+        liste1[i] = malloc(l1*sizeof(pix_t*));
     }
 
     pix_t*** liste2 = malloc(h1*sizeof(pix_t**));
@@ -67,21 +68,20 @@ image_t** split_list (image_t* img){
     img1 -> pixels = liste1;
     image_t* img2 = malloc(sizeof(image_t));
     img2 -> hauteur = h1;
-    img2 -> largeur = l1;
+    img2 -> largeur = l2;
     img2 -> pixels = liste2;
     image_t* img3 = malloc(sizeof(image_t));
-    img3 -> hauteur = h1;
+    img3 -> hauteur = h2;
     img3 -> largeur = l1;
     img3 -> pixels = liste3;
     image_t* img4 = malloc(sizeof(image_t));
-    img4 -> hauteur = h1;
-    img4 -> largeur = l1;
+    img4 -> hauteur = h2;
+    img4 -> largeur = l2;
     img4 -> pixels = liste4;
     res[0] = img1; res[1] = img2; res[2] = img3; res[3] = img4;
     
     return res;
 }
-
 
 int respect_incertitude(image_t* image, int u){
     int max_r = image->pixels[0][0]->r;
@@ -119,17 +119,16 @@ int respect_incertitude(image_t* image, int u){
     return 1;
 }
 
-
 pix_t* average_pixel(image_t* image){
-    float nb_pixels = (float) (image->hauteur * image->largeur);
+    int nb_pixels =(image->hauteur * image->largeur);
     float moy_r = 0;
     float moy_g = 0;
     float moy_b = 0;
     for(int i = 0; i < image->hauteur; i++){
         for(int j = 0; j < image->largeur; j++){
-            moy_r += ((float) image->pixels[i][j]->r)/nb_pixels;
-            moy_g += ((float) image->pixels[i][j]->g)/nb_pixels;
-            moy_b += ((float) image->pixels[i][j]->b)/nb_pixels;
+            moy_r += ((float) image->pixels[i][j]->r)/((float) nb_pixels);
+            moy_g += ((float) image->pixels[i][j]->g)/((float) nb_pixels);
+            moy_b += ((float) image->pixels[i][j]->b)/((float) nb_pixels);
         }
     }
     pix_t* pixel = malloc(sizeof(pix_t));
@@ -139,25 +138,21 @@ pix_t* average_pixel(image_t* image){
     return pixel;
 }
 
-
-
 tree_t* make_tree(image_t* image, int u){
-    if(respect_incertitude(image, u) == 0){
+    tree_t* arbre  = malloc(sizeof(tree_t));
+    if (image->largeur == 1 ||image->hauteur == 1 || respect_incertitude(image, u) == 1){
+        pix_t* avrg_pixel = average_pixel(image);
+        arbre->pixels = avrg_pixel;
+        arbre->enfants = NULL;
+    }else{
         image_t** quad_images = split_list(image);
-        tree_t* arbre = malloc(sizeof(tree_t));
         arbre->enfants = malloc(4*sizeof(tree_t*));
-        arbre->pixel = NULL;
+        arbre->pixels = NULL;
         for(int i = 0; i <4; i++){
             arbre->enfants[i] = make_tree(quad_images[i],u);
         }
-        return arbre;
-    }else{
-        pix_t* avrg_pixel = average_pixel(image);
-        tree_t* arbre  = malloc(sizeof(tree_t));
-        arbre->pixel = avrg_pixel;
-        arbre->enfants = NULL;
-        return arbre;
     }
+    return arbre;
 }
 
 dim_tree_t* make_tree_dim(image_t* image, int u){
@@ -167,6 +162,7 @@ dim_tree_t* make_tree_dim(image_t* image, int u){
     dim_tree->hauteur = image->hauteur;
     return dim_tree;
 }
+
 
 
 int main(int argc, char** argv){
