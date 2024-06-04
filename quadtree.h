@@ -1,13 +1,16 @@
+#pragma once
+
 #include <stdlib.h>
-    
+#include <stdio.h>
+
 typedef struct pixel {
-    int r;
-    int g;
-    int b;
+    char r;
+    char g;
+    char b;
 } pix_t;
 
 typedef struct tree {
-    pix_t* pixel;
+    pix_t* pixels;
     struct tree** enfants;
 } tree_t;
 
