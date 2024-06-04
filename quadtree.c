@@ -169,11 +169,20 @@ dim_tree_t* make_tree_dim(image_t* image, int u){
 }
 
 
-int main(){
-    char* f_n = "sample_1920×1280.ppm";
+int main(int argc, char** argv){
+    assert(argc == 4);
+
+    char* f_n = argv[1];
     int* p_hauteur = malloc(sizeof(int));
     int* p_largeur = malloc(sizeof(int));
-    int* p_taille_max = malloc(sizeof(int));
-    image_t* test = read_ppm (f_n, p_hauteur, p_largeur, p_taille_max);
-    tree_t* test2 = make_tree(test,5);
+    char* sortie = argv[2];
+    int u = 0;
+    int p = 1;
+    int taille = strlen(argv[3]);
+    for (int i=taille-1; i>-1; i--){
+        u += (argv[3][i]-'0')*p;
+        p = p*10;
+    }
+    img_to_ppm(sortie,tree_to_image(make_tree_dim(read_ppm (f_n, p_hauteur, p_largeur),u)));
+    // tree_t* test2 = make_tree(test,5);
 }
