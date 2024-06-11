@@ -1,3 +1,4 @@
+
 #include "ppm.h"
 #include "quadtree.h"
 #include <assert.h>
@@ -38,11 +39,18 @@ void read_header (FILE* fichier, int* hauteur, int* largeur){
 
 int read_int(FILE* fichier){
     assert(fichier!=NULL);
-    unsigned int res=0;
-    unsigned char entier;
+    int res=0;
+    char entier;
+    int p = 100;
+    for (int i = 0 ; i < 3; i++){
+        fscanf(fichier, "%c", &entier);
+        if (entier != 32){
+            res += (entier - '0')*p;
+        }
+        p = p/10;
+    }
     fscanf(fichier, "%c", &entier);
-    res = entier;
-    // printf("%u\n", res);
+    //printf("%d\n",res);
     return res;
 }
 
@@ -67,6 +75,8 @@ image_t* read_ppm (char* name, int* p_hauteur, int* p_largeur){
     res -> hauteur = *p_hauteur;
     res -> largeur = *p_largeur;
     res -> pixels = read_body(f,*p_hauteur,*p_largeur);
+    printf("%d et %d\n", *p_hauteur, *p_largeur);
+    printf("coucou c'est bon pour le read_ppm !\n");
     return res;
 }
 
@@ -112,7 +122,7 @@ image_t* tree_to_image(dim_tree_t* dim_arbre){
 
 void write_header(FILE* f,int largeur, int hauteur){
     assert(f!=NULL);
-    fprintf(f, "P6\n");
+    fprintf(f, "P3\n");
     char* chiffres = malloc(10*sizeof(char));
     int i = 0;
     while(largeur != 0){
@@ -149,14 +159,46 @@ void write_header(FILE* f,int largeur, int hauteur){
 
 }
 
+void print_int_char(int n, FILE* f){
+    int cent = (int) n/100;
+    //printf("%d\n",n);
+    int diz = ((int) n/10)%10;
+    int unit = n%10;
+    char* string = malloc(3*sizeof(char));
+    if (cent == 0){
+        fprintf(f," ");
+        string[0] = ' ';
+    }else{
+        fprintf(f,"%c", '0'+cent);
+        string[0] = '0'+cent;
+    }
+    if (diz == 0 && cent == 0){
+        fprintf(f," ");
+        string[1] = ' ';
+    }else{
+        fprintf(f,"%c", '0'+diz);
+        string[1] = '0'+diz;
+    }
+    fprintf(f,"%c",'0'+unit);    
+    string[2] = '0'+unit;
+    //printf("%s\n",string);
+}
+
 void write_body(FILE* f, int largeur, int hauteur, pix_t*** pixels){
+    int acc = 0;
     for (int i=0; i<hauteur; i++){
         for (int j=0; j<largeur; j++){
-            fprintf(f, "%c", pixels[i][j]->r);
-            fprintf(f, "%c", pixels[i][j]->g);
-            fprintf(f, "%c", pixels[i][j]->b);
+            print_int_char(pixels[i][j]->r,f);
+            fprintf(f," ");
+            print_int_char(pixels[i][j]->g,f);
+            fprintf(f," ");
+            print_int_char(pixels[i][j]->b,f);
+            fprintf(f," ");
         }
+        fprintf(f,"\n");
+        acc++;
     }
+    printf("On a fini d'écrire le body du fichier !!\n Et il y a %d lignes\nun pixel vers la fin : %d %d %d\n", acc, pixels[0][0]->r, pixels[0][0]->g, pixels[0][0]->b);
 }
 
 void img_to_ppm (char* filename, image_t* image){
