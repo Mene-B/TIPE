@@ -1,3 +1,4 @@
+
 #include "quadtree.h"
 #include "ppm.h"
 #include <assert.h>
@@ -179,6 +180,6 @@ int main(int argc, char** argv){
         u += (argv[3][i]-'0')*p;
         p = p*10;
     }
-    img_to_ppm(sortie,tree_to_image(make_tree_dim(read_ppm (f_n, p_hauteur, p_largeur),u)));
+    img_to_ppm(sortie,tree_to_image(make_tree_dim(read_ppm(f_n, p_hauteur, p_largeur),u)));
     // tree_t* test2 = make_tree(test,5);
 }
