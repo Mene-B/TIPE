@@ -39,21 +39,24 @@ void read_header (FILE* fichier, int* hauteur, int* largeur){
 
 int read_int(FILE* fichier){
     assert(fichier!=NULL);
-    int res=0;
-    char entier;
-    int p = 100;
-    for (int i = 0 ; i < 3; i++){
-        fscanf(fichier, "%c", &entier);
-        if (entier != 32){
-            res += (entier - '0')*p;
-        }
-        p = p/10;
-    }
-    fscanf(fichier, "%c", &entier);
-    //printf("%d\n",res);
-    return res;
+    unsigned char entier;
+    fscanf(fichier,"%c", &entier);
+    return entier;
 }
 
+pix_t*** read_body_P6 (FILE* fichier, int hauteur, int largeur){
+    pix_t*** res = malloc(hauteur*sizeof(pix_t**));
+    for (int i=0; i<hauteur; i++){
+        res[i] = malloc(largeur*sizeof(pix_t*));
+        for (int j=0; j<largeur; j++){
+            res[i][j] = malloc(sizeof(pix_t));
+            res[i][j]->r = read_int(fichier);
+            res[i][j]->g = read_int(fichier);
+            res[i][j]->b = read_int(fichier);
+        }
+    }
+    return res;
+}
 pix_t*** read_body (FILE* fichier, int hauteur, int largeur){
     pix_t*** res = malloc(hauteur*sizeof(pix_t**));
     for (int i=0; i<hauteur; i++){
